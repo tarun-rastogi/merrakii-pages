@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" role="img" aria-label="Vendor">
+  <rect width="50" height="50" rx="10" fill="#EEF4FF"/>
+  <path d="M25 11 37 20v18H13V20L25 11z" fill="none" stroke="#4361EE" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="20" y="28" width="10" height="10" rx="1.5" fill="#7C3AED" opacity="0.9"/>
+</svg>

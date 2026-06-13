@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Price Quotation — Merrakii (INR)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cyan: #00b4d8;
+      --blue: #4361ee;
+      --purple: #7c3aed;
+      --navy: #1c2340;
+      --gray: #888fa8;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --paper: #ffffff;
+      --table-head: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      --accent-soft: #eef2ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      font-size: 15px;
+    }
+
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+      color: var(--navy);
+      background: linear-gradient(165deg, #f0f9fc 0%, #f1f5f9 45%, #eef2ff 100%);
+      line-height: 1.45;
+    }
+
+    .wrap-screen {
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+    }
+
+    .toolbar {
+      max-width: 820px;
+      margin: 0 auto 16px;
+    }
+
+    .btn-print {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(67, 97, 238, 0.35);
+    }
+
+    .btn-print:hover {
+      filter: brightness(1.06);
+    }
+
+    .btn-print:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    .sheet {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--paper);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(67, 97, 238, 0.08);
+      box-shadow: 0 4px 32px rgba(28, 35, 64, 0.1);
+    }
+
+    .accent-bar {
+      height: 6px;
+      background: linear-gradient(90deg, var(--cyan) 0%, var(--blue) 50%, var(--purple) 100%);
+    }
+
+    .sheet-inner {
+      padding: 36px 48px 48px;
+    }
+
+    header.doc-head {
+      margin-bottom: 22px;
+      padding-bottom: 0;
+      border-bottom: none;
+      text-align: left;
+    }
+
+    .letterhead {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: 20px;
+      row-gap: 14px;
+      align-items: start;
+      margin-bottom: 22px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+      width: 100%;
+    }
+
+    .letterhead-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .letterhead-col--left {
+      grid-column: 1;
+      grid-row: 1;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .letterhead-col--right {
+      grid-column: 2;
+      grid-row: 1;
+      align-items: flex-end;
+      text-align: right;
+      margin-top: 50px;
+    }
+
+    .letterhead-doc-row {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      text-align: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .letterhead-logo {
+      display: block;
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+      object-fit: contain;
+      object-position: center;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    .letterhead-col--left .letterhead-logo {
+      object-position: left center;
+    }
+
+    .letterhead-col--right .letterhead-logo {
+      object-position: right center;
+    }
+
+    .letterhead-logo.letterhead-logo--maple {
+      width: 150px;
+      height: 150px;
+    }
+
+    .letterhead-text {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .letterhead-text strong {
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .letterhead-text a {
+      color: var(--blue);
+      word-break: break-word;
+    }
+
+    .letterhead-text a.letterhead-email {
+      word-break: normal;
+      white-space: nowrap;
+    }
+
+    .letterhead-col--left .letterhead-text {
+      margin-top: -50px;
+    }
+
+    .letterhead-doc-title {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1.2;
+      color: #000000;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      .letterhead {
+        grid-template-columns: 1fr;
+      }
+      .letterhead-col--left,
+      .letterhead-col--right {
+        grid-column: 1;
+        grid-row: auto;
+      }
+      .letterhead-col--right {
+        align-items: flex-start;
+        text-align: left;
+        margin-top: 16px;
+      }
+      .letterhead-col--right .letterhead-logo {
+        object-position: left center;
+      }
+      .letterhead-doc-row {
+        padding-top: 14px;
+      }
+      .letterhead-doc-title {
+        font-size: 0.95rem;
+        letter-spacing: 0.05em;
+      }
+      .sheet-inner {
+        padding: 28px 22px 36px;
+      }
+    }
+
+    .quote-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-top: 18px;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+
+    .quote-meta-left {
+      text-align: left;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .quote-meta-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .quote-meta-label {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .quote-meta-value {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--navy);
+      line-height: 1.45;
+    }
+
+    .quote-project-block {
+      text-align: left;
+      margin-bottom: 8px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .quote-project-block .quote-meta-value {
+      font-weight: 500;
+    }
+
+    @media (max-width: 520px) {
+      .quote-meta-row {
+        flex-direction: column;
+      }
+
+      .quote-meta-right {
+        align-self: flex-end;
+        max-width: 100%;
+      }
+    }
+
+    h2 {
+      margin: 22px 0 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      border-left: 4px solid var(--blue);
+      padding-left: 10px;
+    }
+
+    p {
+      margin: 0 0 10px;
+      text-align: justify;
+      text-wrap: pretty;
+      hyphens: auto;
+      font-size: 14px;
+    }
+
+    ul {
+      margin: 8px 0 12px;
+      padding-left: 1.2rem;
+      font-size: 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+      text-align: justify;
+      text-wrap: pretty;
+      hyphens: auto;
+    }
+
+    li::marker {
+      color: var(--blue);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 12px 0 16px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+
+    td {
+      text-align: justify;
+      text-wrap: pretty;
+      hyphens: auto;
+    }
+
+    th {
+      background: var(--table-head);
+      font-weight: 600;
+      color: var(--navy);
+      text-align: left;
+      border-bottom: 2px solid var(--line);
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fafbfc;
+    }
+
+    .amount {
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      text-align: end;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    .totals {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    @page {
+      size: A4;
+      margin: 14mm;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      .wrap-screen {
+        padding: 0;
+        max-width: none;
+      }
+
+      .sheet {
+        margin: 0;
+        box-shadow: none;
+        border-radius: 0;
+        max-width: none;
+        border: none;
+      }
+
+      .sheet-inner {
+        padding: 0;
+      }
+
+      header.doc-head {
+        break-after: avoid;
+      }
+
+      .letterhead {
+        break-inside: avoid;
+      }
+
+      h2 {
+        break-after: avoid;
+      }
+
+      table {
+        break-inside: avoid;
+      }
+
+      tr {
+        break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .letterhead-logo {
+        width: 50px;
+        height: 50px;
+      }
+
+      .letterhead-logo.letterhead-logo--maple {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    footer.doc-foot {
+      margin-top: 28px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--gray);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap-screen">
+    <div class="toolbar no-print">
+      <button type="button" class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <article class="sheet" id="quotation">
+      <div class="accent-bar"></div>
+      <div class="sheet-inner">
+      <header class="doc-head">
+        <div class="letterhead">
+          <div class="letterhead-col letterhead-col--left">
+            <img
+              class="letterhead-logo letterhead-logo--maple"
+              src="images/maple-ai-logo.jpg"
+              alt="Maple AI Technologies"
+              width="150"
+              height="150"
+              decoding="async"
+            />
+            <div class="letterhead-text">
+              <strong>Tarun Rastogi</strong><br />
+              <a class="letterhead-email" href="mailto:tarunrastogi@mapleaitechnologies.com">tarunrastogi@mapleaitechnologies.com</a><br />
+              <a href="https://mapleaitechnologies.com">mapleaitechnologies.com</a><br />
+              <a href="tel:+919619060302">+91 9619060302</a>
+            </div>
+          </div>
+          <div class="letterhead-col letterhead-col--right">
+            <img
+              class="letterhead-logo"
+              src="images/merrakii-logo.png"
+              alt="Merrakii"
+              width="50"
+              height="50"
+              decoding="async"
+            />
+            <div class="letterhead-text">
+              <strong>Merrakii Education</strong><br />
+              Munjal Universal Consultancy<br />
+              T-14, 3rd Floor, Rasvilas Salcon, Saket, South Delhi,<br />
+              New Delhi, India 110017
+            </div>
+          </div>
+          <div class="letterhead-doc-row">
+            <p class="letterhead-doc-title">Quotation</p>
+          </div>
+        </div>
+        <div class="quote-meta-row">
+          <div class="quote-meta-left">
+            <p class="quote-meta-label">Quotation No.</p>
+            <p class="quote-meta-value">MAT_QTN_2026_001</p>
+          </div>
+          <div class="quote-meta-right">
+            <p class="quote-meta-label">Quotation Date</p>
+            <p class="quote-meta-value">16 April 2026</p>
+          </div>
+        </div>
+        <div class="quote-project-block">
+          <p class="quote-meta-label">Project</p>
+          <p class="quote-meta-value">Merrakii — digital academic marketplace</p>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Executive summary</h2>
+        <p>
+          This quotation covers <strong>requirement gathering</strong>, <strong>design</strong>, <strong>engineering</strong>, <strong>quality assurance</strong>, <strong>deployment support</strong>, and <strong>project management</strong> for <strong>Merrakii</strong>—a <strong>student-centred web platform</strong> for <strong>guided discovery</strong>, <strong>institute &amp; services selection</strong>, <strong>structured application</strong>, <strong>payment</strong>, and <strong>post-payment confirmation</strong>.
+        </p>
+        <p>
+          Commercial delivery is organised in <strong>three phases</strong>. <strong>Phase 1</strong> is <strong>MVP development of the web application</strong> (the programme and fees in the tables that follow). <strong>Phase 2</strong> is <strong>native mobile application development</strong> (iOS and Android), priced and scheduled separately when you choose to proceed. <strong>Phase 3</strong> is an <strong>annual retain-and-maintain (AMC)</strong> contract for ongoing production support after go-live.
+        </p>
+        <p>
+          When <strong>development (Phase 1) is complete</strong>, you receive <strong>three months of complimentary maintenance</strong> on the delivered scope. After that period, you may <strong>opt into Phase 3</strong> under a separate AMC, or continue with change-controlled enhancements as agreed.
+        </p>
+        <p>
+          <strong>Tarun Rastogi</strong> leads this engagement for the client. He brings <strong>strong delivery ownership</strong>, <strong>strategic and leadership judgement</strong>, <strong>project management discipline</strong>, and <strong>hands-on development experience</strong>, with <strong>15 years in industry</strong> across <strong>multinational companies</strong>, building <strong>high-quality applications</strong> deployed for <strong>demanding, global-class clients</strong>.
+        </p>
+      </section>
+
+      <section>
+        <h2>2. Modular scope and fees</h2>
+        <p>
+          <strong>Indicative programme phases (sequential calendar).</strong> The table below frames delivery in terms leadership can govern: clear outcomes per gate, time-boxed execution, and explicit commercial checkpoints.
+        </p>
+        <p>
+          <strong>Phase 1 — web application development.</strong> Total duration when run one after another is <strong>12 weeks</strong> (4 + 2 + 2 + 2 + 2). Professional fees are stated in INR.
+        </p>
+        <table aria-label="Project phases, deliverables, duration, and fees">
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Phase</th>
+              <th scope="col">Deliverables</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Fee (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><strong>Discovery</strong></td>
+              <td>Facilitated leadership workshops; stakeholder and dependency map; problem definition and success measures; written scope baseline, decision log, and risk / compliance surface for board-level visibility.</td>
+              <td>4 weeks</td>
+              <td class="amount">₹2,00,000</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><strong>Design</strong></td>
+              <td>Target solution architecture; critical user and service flows; integration boundaries; security and data-handling model; build-ready specifications with traceability into build and test.</td>
+              <td>2 weeks</td>
+              <td class="amount">₹1,00,000</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>Web development</strong></td>
+              <td>Web application implemented to the agreed SoW slice; integrations and configuration per contract; internal QA build; release candidate meeting agreed test-entry criteria—governed as a fixed window for capital efficiency.</td>
+              <td>2 weeks</td>
+              <td class="amount">₹1,00,000</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><strong>Testing</strong></td>
+              <td>Test strategy and execution; defect burn-down to agreed threshold; regression on revenue- and compliance-critical paths; UAT support; formal readiness pack and sponsor sign-off gate.</td>
+              <td>2 weeks</td>
+              <td class="amount">₹1,00,000</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><strong>Release &amp; deployment</strong></td>
+              <td>Production deployment runbook; smoke and rollback validation; controlled go-live; joint launch communications; hypercare window and knowledge transfer so operations owns the live service.</td>
+              <td>2 weeks</td>
+              <td class="amount">₹1,00,000</td>
+            </tr>
+            <tr class="totals">
+              <td colspan="3">Total (sequential programme)</td>
+              <td>12 weeks</td>
+              <td class="amount">₹6 lakh</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <strong>Phase 2 — native mobile.</strong> Priced and scheduled separately from the web programme above; assumes a shared API and a mobility specification signed before build.
+        </p>
+        <table aria-label="Phase 2 mobile application development">
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Phase</th>
+              <th scope="col">Deliverables</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Fee (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>6</td>
+              <td><strong>iOS application development</strong></td>
+              <td>iOS application engineering to the agreed parity slice; consumption of shared APIs; secure session, navigation, and offline-tolerant patterns where scoped; TestFlight-ready builds; App Store submission pack (metadata, signing, privacy artefacts) per your policies; internal QA and defect triage to the agreed exit gate.</td>
+              <td>2 weeks</td>
+              <td class="amount">₹1,00,000</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><strong>Android application development</strong></td>
+              <td>Android application engineering to the same functional baseline; Play Console–ready tracks; integration, performance, and device-matrix coverage per SoW; internal QA and stabilisation to the agreed handoff criteria ahead of store or enterprise distribution.</td>
+              <td>2 weeks</td>
+              <td class="amount">₹1,00,000</td>
+            </tr>
+            <tr class="totals">
+              <td colspan="3">Total (Phase 2 — sequential)</td>
+              <td>4 weeks</td>
+              <td class="amount">₹2 lakh</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <strong>Phase 3 — retain &amp; maintain (AMC).</strong> Annual contract after go-live: keeps the product supported, patched, and healthy under agreed service levels. Priced separately from Phases 1–2.
+        </p>
+        <table aria-label="Phase 3 annual maintenance contract">
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Phase</th>
+              <th scope="col">Deliverables</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Fee (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>8</td>
+              <td><strong>AMC — retain &amp; maintain</strong></td>
+              <td>Production support within agreed hours; defect triage and fixes for covered releases; security and dependency patches aligned to your change window; minor configuration or copy updates within scope caps; monthly health check and incident summary for leadership visibility.</td>
+              <td>1 year</td>
+              <td class="amount">₹1,20,000</td>
+            </tr>
+            <tr class="totals">
+              <td colspan="3">Total (Phase 3 — AMC)</td>
+              <td>1 year</td>
+              <td class="amount">₹1 lakh 20 thousand</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>3. Inclusions</h2>
+        <ul>
+          <li>Discovery workshops for the signed scope (within agreed limits) and a written scope baseline.</li>
+          <li>User experience and interface design for surfaces agreed in the statement of work.</li>
+          <li>Engineering, automated and manual testing, and deployment support for agreed environments.</li>
+          <li>Project management embedded in the agreed professional fees.</li>
+          <li>Application hosting for agreed development, staging, and production environments during the delivery programme, as defined in the statement of work.</li>
+          <li>Third-party API integration charges used in explore, discovery, application, post-payment, user dashboard, and vendor dashboard.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>4. Exclusions</h2>
+        <ul>
+          <li>Client-owned content, catalog accuracy, institute contracts, and legal or policy copy.</li>
+          <li>Third-party spend outside what Inclusions expressly cover — for example: payment gateway charges; Android hosting charges; Google Play Store hosting or distribution charges; Apple App Store hosting or distribution charges; and other tools or API integrations not within the application hosting and third-party API integration inclusion items above, or not within the phases defined elsewhere in this quotation.</li>
+          <li>Formal penetration testing by a named firm, formal legal opinions, and formal WCAG certification unless separately scoped.</li>
+          <li>Ongoing production support after the agreed warranty window (available under a separate retainer).</li>
+        </ul>
+      </section>
+
+      <footer class="doc-foot">
+        Maple AI Technologies · tarunrastogi@mapleaitechnologies.com · +91 9619060302
+      </footer>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

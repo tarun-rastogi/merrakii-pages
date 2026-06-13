@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discovery Phase — Completion Summary | Merrakii</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cyan: #00b4d8;
+      --blue: #4361ee;
+      --purple: #7c3aed;
+      --navy: #1c2340;
+      --gray: #888fa8;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --paper: #ffffff;
+      --table-head: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      --accent-soft: #eef2ff;
+      --ok: #166534;
+      --ok-soft: #ecfdf3;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { font-size: 15px; }
+
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+      color: var(--navy);
+      background: linear-gradient(165deg, #f0f9fc 0%, #f1f5f9 45%, #eef2ff 100%);
+      line-height: 1.45;
+    }
+
+    .wrap-screen {
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+    }
+
+    .toolbar {
+      max-width: 820px;
+      margin: 0 auto 16px;
+    }
+
+    .btn-print {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(67, 97, 238, 0.35);
+    }
+
+    .btn-print:hover { filter: brightness(1.06); }
+
+    .btn-print:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    .sheet {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--paper);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(67, 97, 238, 0.08);
+      box-shadow: 0 4px 32px rgba(28, 35, 64, 0.1);
+    }
+
+    .accent-bar {
+      height: 6px;
+      background: linear-gradient(90deg, var(--cyan) 0%, var(--blue) 50%, var(--purple) 100%);
+    }
+
+    .sheet-inner {
+      padding: 36px 48px 48px;
+    }
+
+    .doc-header {
+      margin-bottom: 18px;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .letterhead {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: 20px;
+      row-gap: 14px;
+      align-items: start;
+      margin-bottom: 18px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+      width: 100%;
+    }
+
+    .letterhead-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .letterhead-col--left {
+      grid-column: 1;
+      grid-row: 1;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .letterhead-col--right {
+      grid-column: 2;
+      grid-row: 1;
+      align-items: flex-end;
+      text-align: right;
+      margin-top: 50px;
+    }
+
+    .letterhead-doc-row {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      text-align: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .letterhead-logo {
+      display: block;
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+      object-fit: contain;
+      object-position: center;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    .letterhead-col--left .letterhead-logo { object-position: left center; }
+    .letterhead-col--right .letterhead-logo { object-position: right center; }
+
+    .letterhead-logo.letterhead-logo--maple {
+      width: 150px;
+      height: 150px;
+    }
+
+    .letterhead-text {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .letterhead-text strong {
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .letterhead-text a {
+      color: var(--blue);
+      word-break: break-word;
+    }
+
+    .letterhead-text a.letterhead-email {
+      word-break: normal;
+      white-space: nowrap;
+    }
+
+    .letterhead-col--left .letterhead-text {
+      margin-top: -50px;
+    }
+
+    .letterhead-doc-title {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.25;
+      color: #000000;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      .letterhead { grid-template-columns: 1fr; }
+      .letterhead-col--left,
+      .letterhead-col--right {
+        grid-column: 1;
+        grid-row: auto;
+      }
+      .letterhead-col--right {
+        align-items: flex-start;
+        text-align: left;
+        margin-top: 16px;
+      }
+      .letterhead-col--right .letterhead-logo { object-position: left center; }
+      .letterhead-doc-row { padding-top: 14px; }
+      .letterhead-doc-title { font-size: 0.95rem; letter-spacing: 0.05em; }
+      .sheet-inner { padding: 28px 22px 36px; }
+    }
+
+    .completion-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 22px;
+      width: 100%;
+    }
+
+    .completion-meta-label {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .completion-meta-value {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--navy);
+      line-height: 1.45;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .completion-meta-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .completion-meta-field + .completion-meta-field {
+      margin-top: 16px;
+    }
+
+    h2 {
+      margin: 22px 0 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      border-left: 4px solid var(--blue);
+      padding-left: 10px;
+    }
+
+    h3 {
+      margin: 14px 0 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    p {
+      margin: 0 0 10px;
+      text-align: justify;
+      text-wrap: pretty;
+      hyphens: auto;
+      font-size: 14px;
+    }
+
+    ul {
+      margin: 6px 0 12px;
+      padding-left: 1.2rem;
+      font-size: 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+      text-align: justify;
+      text-wrap: pretty;
+      hyphens: auto;
+    }
+
+    li::marker { color: var(--blue); }
+
+    table.deliverables td.deliver-cell,
+    table.deliverables td.value-cell {
+      min-width: 0;
+    }
+
+    table.deliverables tbody tr {
+      break-inside: avoid;
+    }
+
+    .pair-line {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      text-align: left;
+      text-wrap: pretty;
+      line-height: 1.45;
+      margin: 0;
+      font-size: 14px;
+      min-width: 0;
+    }
+
+    .pair-line > span:last-child {
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .bullet {
+      flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-top: 0.42em;
+    }
+
+    .bullet-accept { background: var(--blue); }
+    .bullet-value { background: var(--purple); }
+
+    table.deliverables td.status-cell {
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .callout {
+      margin: 16px 0;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .callout-ok {
+      background: var(--ok-soft);
+      border-color: #bbf7d0;
+    }
+
+    .callout-ok strong { color: var(--ok); }
+
+    table.deliverables {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 10px 0 18px;
+    }
+
+    table.deliverables th,
+    table.deliverables td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    table.deliverables th {
+      background: var(--table-head);
+      font-weight: 600;
+      color: var(--navy);
+      border-bottom: 2px solid var(--line);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--ok);
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ok);
+      flex-shrink: 0;
+    }
+
+    footer.doc-foot {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--gray);
+      text-align: center;
+    }
+
+    .muted { color: var(--muted); font-size: 13px; }
+
+    .value-list {
+      margin: 0;
+      padding-left: 1.15rem;
+      list-style: disc;
+      list-style-position: outside;
+      box-sizing: border-box;
+    }
+
+    .value-list li {
+      margin-bottom: 5px;
+      padding-left: 0.25rem;
+      text-align: left;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .value-inline-note {
+      display: block;
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .color-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .color-chip {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(28, 35, 64, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    a { color: var(--blue); }
+
+    @page { size: A4; margin: 14mm; }
+
+    @media print {
+      .toolbar,
+      .no-print { display: none !important; }
+      body { background: #fff; }
+      .wrap-screen { padding: 0; max-width: none; }
+      .sheet {
+        box-shadow: none;
+        margin: 0;
+        max-width: none;
+        border-radius: 0;
+        border: none;
+      }
+      .sheet-inner { padding: 0; }
+      .letterhead { break-inside: avoid; }
+      .letterhead-logo { width: 50px; height: 50px; }
+
+      .letterhead-logo.letterhead-logo--maple {
+        width: 150px;
+        height: 150px;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap-screen">
+  <div class="toolbar no-print">
+    <button type="button" class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <article class="sheet">
+    <div class="accent-bar"></div>
+    <div class="sheet-inner">
+    <div class="doc-header">
+      <div class="letterhead">
+        <div class="letterhead-col letterhead-col--left">
+          <img
+            class="letterhead-logo letterhead-logo--maple"
+            src="images/maple-ai-logo.jpg"
+            alt="Maple AI Technologies"
+            width="150"
+            height="150"
+            decoding="async"
+          />
+          <div class="letterhead-text">
+            <strong>Tarun Rastogi</strong><br />
+            <a class="letterhead-email" href="mailto:tarunrastogi@mapleaitechnologies.com">tarunrastogi@mapleaitechnologies.com</a><br />
+            <a href="https://mapleaitechnologies.com">mapleaitechnologies.com</a><br />
+            <a href="tel:+919619060302">+91 9619060302</a>
+          </div>
+        </div>
+        <div class="letterhead-col letterhead-col--right">
+          <img
+            class="letterhead-logo"
+            src="images/merrakii-logo.png"
+            alt="Merrakii"
+            width="50"
+            height="50"
+            decoding="async"
+          />
+          <div class="letterhead-text">
+            <strong>Merrakii Education</strong><br />
+            Munjal Universal Consultancy<br />
+            T-14, 3rd Floor, Rasvilas Salcon, Saket, South Delhi,<br />
+            New Delhi, India 110017
+          </div>
+        </div>
+        <div class="letterhead-doc-row">
+          <p class="letterhead-doc-title">Milestone Completed: Discovery</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="completion-meta-row">
+      <div class="completion-meta-left">
+        <div class="completion-meta-field">
+          <p class="completion-meta-label">Project No.</p>
+          <p class="completion-meta-value">MAT_PRJ_2026_001</p>
+        </div>
+      </div>
+      <div class="completion-meta-right">
+        <div class="completion-meta-field">
+          <p class="completion-meta-label">Issue Date</p>
+          <p class="completion-meta-value">18 May 2026</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Executive Summary</h2>
+    <p>
+      Discovery aligns the vendor and client on measurable outcomes, audience needs, scope boundaries, technical constraints, and how success will be validated before substantial design or build investment. Outputs from this phase de-risk downstream work by freezing a credible baseline requirement set and roadmap.
+    </p>
+
+    <h2>Discovery deliverables — measurable completion record</h2>
+    <table class="deliverables" aria-label="Discovery categories, deliverables, outcomes, and status">
+      <colgroup>
+        <col style="width:17%" />
+        <col style="width:30%" />
+        <col style="width:37%" />
+        <col style="width:16%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Deliverables</th>
+          <th scope="col">Value / outcome</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3"><strong>Project kick-off &amp; governance</strong></td>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Formal kick-off session</strong> held with Merrakii and Maple AI Technologies.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span>Kick-off completed on <strong>22 April 2026</strong>; outcomes and attendees recorded.</span></div>
+          </td>
+          <td rowspan="3" class="status-cell"><span class="status"><span class="status-dot" aria-hidden="true"></span>Complete</span></td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Recurring review cadence</strong> defined (frequency, attendees, purpose).</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span>A <strong>weekly</strong> working rhythm agreed: recurring sessions at Merrakii’s office on <strong>Wednesdays</strong> and <strong>Fridays</strong>.</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Project POCs</strong> identified on client (Merrakii) and vendor (Maple AI Technologies) sides.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span><strong>Ruchii Suri</strong> — single point of contact on the Merrakii side; <strong>Tarun Rastogi</strong> — accountable lead on the Maple AI Technologies side.</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>Brand presentation &amp; business clarity</strong></td>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Website colour theme</strong> (primary, secondary, accent and usage notes) reviewed with Merrakii and accepted as the baseline for design.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span>Signed-off reference palette for UI build: focal cream <span class="color-inline" title="Focal cream #FFFFEE"><span class="color-chip" style="background-color:#FFFFEE" aria-hidden="true"></span><strong>#FFFFEE</strong></span>, Merrakii brand <span class="color-inline" title="Merrakii brand #C22C31"><span class="color-chip" style="background-color:#C22C31" aria-hidden="true"></span><strong>#C22C31</strong></span>, accent <span class="color-inline" title="Accent #001D87"><span class="color-chip" style="background-color:#001D87" aria-hidden="true"></span><strong>#001D87</strong></span> (with usage notes as reviewed).</span></div>
+          </td>
+          <td rowspan="3" class="status-cell"><span class="status"><span class="status-dot" aria-hidden="true"></span>Complete</span></td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Business purpose</strong> for the Merrakii website articulated by stakeholders and confirmed as accurate.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span>An <strong>academic marketplace</strong> helping students explore <strong>test preparation</strong>, <strong>certification</strong>, and <strong>diploma</strong> programmes from Merrakii’s partner vendors; evaluate options; apply; pay fees to confirm enrolment; and return to a <strong>personal dashboard</strong> for enrolment history and any incomplete journeys.</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Business intent</strong> (what Merrakii expects the website to achieve) documented and agreed with stakeholders.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span>Create a funnel that <strong>attracts prospects</strong>, <strong>guides them to complete enrolment</strong>, and <strong>responds with clarity</strong> to questions on vendors, programmes, enrolment steps, or account issues.</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>Site pages, services &amp; functional categories</strong></td>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Required webpages for launch</strong> (and purpose of each) listed and mutually agreed with Merrakii.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span><span class="muted" style="font-size:inherit;">Agreed launch surface outline:</span><ul class="value-list"><li>Homepage</li><li>Vendor catalogue</li><li>Vendor detail</li><li>Course detail</li><li>Exam detail</li><li>Apply</li><li>Payment</li><li>User dashboard — home</li><li>Transaction detail</li><li>Internal dashboard</li><li>Add vendor</li><li>Update vendor</li></ul></span></div>
+          </td>
+          <td rowspan="3" class="status-cell"><span class="status"><span class="status-dot" aria-hidden="true"></span>Complete</span></td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Services Merrakii will present</strong> on the website enumerated and validated with stakeholders.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span><span class="muted" style="font-size:inherit;">Services available to learners on the site:</span><ul class="value-list"><li>Search-by-course discovery</li><li>Search-by-vendor discovery</li><li>Vendor catalogue browsing and listings</li><li>Programme application (submit application flow)</li><li>Fees collection via payment gateway — methods as enabled by the authorised provider account</li><li>Contact Merrakii (enquiries and support pathways)</li><li>Resume an incomplete enrolment journey</li><li>View enrolled programmes and related transactions</li></ul></span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Functional content categories</strong> for the product experience (e.g. discovery, applications, accounts, payments) named and agreed.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span><span class="muted" style="font-size:inherit;">Agreed grouping for catalogue filtering and UX:</span><ul class="value-list"><li><strong>Test preparation</strong> programmes</li><li><strong>Certification</strong> programmes</li><li><strong>Diploma</strong> programmes</li></ul></span></div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Client-authored website content</strong></td>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Merrakii-supplied content requirements</strong> — copy, imagery, institute/service material, and allied assets — listed; supplied items received or logged.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span><span class="muted" style="font-size:inherit;">Content register — items received or explicitly logged as Merrakii-owned deliverables:</span><ul class="value-list"><li>Vendor profiles and course catalogues supplied by Merrakii</li><li>Operational contact paths for support and escalation — to be picked from existing website</li><li>Legal: terms &amp; conditions; privacy policy — to be picked from existing website</li><li>Marketing copy: About Merrakii; “Why choose Merrakii” narrative — to be picked from existing website</li><li>Optional: vendor testimonials; student testimonials; blog posts — when provided</li></ul></span></div>
+          </td>
+          <td class="status-cell"><span class="status"><span class="status-dot" aria-hidden="true"></span>Complete</span></td>
+        </tr>
+        <tr>
+          <td rowspan="5"><strong>Integrations, infrastructure &amp; commercial</strong></td>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Integrations identified and agreed</strong></span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span><span class="muted" style="font-size:inherit;">Baselined for engineering handover.</span><ul class="value-list" style="margin-top:4px;"><li><strong>OTP</strong> verification to capture the lead</li><li><strong>Transactional email</strong> to learner and vendor on enrolment</li><li><strong>Payment gateway</strong> to facilitate payment</li></ul></span></div>
+          </td>
+          <td rowspan="5" class="status-cell"><span class="status"><span class="status-dot" aria-hidden="true"></span>Complete</span></td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Domain &amp; DNS</strong> details for deployment and cutover gathered from Merrakii (or agreed access).</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span><strong>merrakii.co.in</strong> documented for registrar, DNS records, and go-live.</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Payment gateway onboarding</strong> — vendor forms/checklists issued to Merrakii; completed artefacts received back as required for onboarding.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span><strong>Razorpay</strong> finalized as the merchant provider; <strong>UPI</strong>, <strong>cards</strong>, <strong>netbanking</strong>, <strong>EMI</strong>, <strong>wallets</strong>, and <strong>Pay&nbsp;Later</strong> will be the supported payment methods.</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Phased delivery roadmap</strong> (design → build → QA → launch → hypercare or equivalent) presented by Maple AI Technologies and understood by Merrakii.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span>Roadmap shared as part of the Kickoff Deck: <a href="https://tarun-rastogi.github.io/merrakii-pages/deliverable/kickoff-deck/Merrakii_sales_deck.html">tarun-rastogi.github.io/merrakii-pages/deliverable/kickoff-deck/Merrakii_sales_deck.html</a><span class="value-inline-note">Web-hosted read-only view; PDF export available from the browser if required.</span></span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="deliver-cell">
+            <div class="pair-line accept-line"><span class="bullet bullet-accept" aria-hidden="true"></span><span><strong>Commercial quotation</strong> for agreed Discovery outcomes and subsequent phases shared with Merrakii and mutually accepted.</span></div>
+          </td>
+          <td class="value-cell">
+            <div class="pair-line value-line"><span class="bullet bullet-value" aria-hidden="true"></span><span>Agreed commercial baseline for professional fees and phase structure: <a href="https://tarun-rastogi.github.io/merrakii-pages/deliverable/quotation/Merrakii_quotation.html">INR quotation — Merrakii</a>.</span></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Handover into next phases</h2>
+    <p>
+      Discovery is complete. The programme now proceeds into the <strong>design and development</strong> phase using the accepted baseline captured above.
+    </p>
+
+    <h2>Invoice</h2>
+    <p>
+      Maple AI Technologies is issuing the Discovery <strong>invoice together with this completion summary</strong>. Merrakii is kindly asked to <strong>clear that invoice</strong> in accordance with Merrakii’s procurement process and the agreed commercial basis.
+    </p>
+
+    <footer class="doc-foot">
+      Maple AI Technologies · tarunrastogi@mapleaitechnologies.com · +91 9619060302
+    </footer>
+    </div>
+  </article>
+  </div>
+</body>
+</html>

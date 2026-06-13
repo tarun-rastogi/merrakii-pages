@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fapply\u002F[programId]","\u002Fexams\u002F[id]\u002Finstitutes","\u002Ffields\u002F[slug]","\u002Finstitutes\u002F[id]","\u002Fpayment\u002F[applicationId]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
